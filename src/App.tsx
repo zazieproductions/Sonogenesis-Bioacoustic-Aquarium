@@ -481,7 +481,7 @@ export default function App() {
           {SPEEDS.map((s) => (
             <Btn key={s} active={speed === s} onClick={() => setSpeed(s)} className="px-1.5">{s}×</Btn>
           ))}
-          <Btn active={w.globals.freezeLife} tone="amber" onClick={() => { w.globals.freezeLife = !w.globals.freezeLife; setTick(tick + 1); }} title="Freeze births, deaths & aging; movement and sound continue (F)">Freeze life</Btn>
+          <Btn active={w.globals.freezeLife} tone="amber" onClick={() => { w.globals.freezeLife = !w.globals.freezeLife; setTick(tick + 1); }} title="Pause aging, metabolism and reproduction; movement, feeding, predation and sound continue (F)">Freeze life</Btn>
         </div>
 
         <div className="pointer-events-auto flex items-center gap-2 rounded-md border border-cyan-300/10 bg-black/40 px-2 py-2 backdrop-blur-md">
@@ -562,7 +562,7 @@ export default function App() {
         </div>
       )}
       {w.globals.freezeLife && (
-        <div className="pointer-events-none absolute left-1/2 top-[70px] -translate-x-1/2 translate-y-8 text-[10px] uppercase tracking-[0.3em] text-amber-200/70">Population frozen — life cycle suspended</div>
+        <div className="pointer-events-none absolute left-1/2 top-[70px] -translate-x-1/2 translate-y-8 text-[10px] uppercase tracking-[0.3em] text-amber-200/70">Aging, metabolism and reproduction paused · interactions continue</div>
       )}
 
       {/* overlays: observatory, lab, library */}
