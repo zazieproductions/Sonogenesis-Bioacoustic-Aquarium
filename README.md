@@ -2,6 +2,8 @@
 
 ### Artificial ecology of living sound
 
+**Live site:** [sonogenesis.pages.dev](https://sonogenesis.pages.dev)
+
 **A small world with a very large imagination.** SONOGENESIS is a browser-based artificial-life instrument: organisms inherit genomes that shape their bodies, behavior, metabolism, and voices; habitats decide which signals carry and which lineages thrive. Watch the ecology change, then tune, inspect, breed, and archive its inhabitants.
 
 The result is both a simulation you can explore and a soundscape composed by the system itself.
