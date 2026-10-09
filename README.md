@@ -6,6 +6,10 @@
 
 The result is both a simulation you can explore and a soundscape composed by the system itself.
 
+![The full world at t = 121 s: five habitats side by side, each carrying different lineages, with live habitat labels, nutrient particles, call signals, and the minimap](docs/images/screenshot-world.png)
+
+*The full world at t = 121 s (seed 2401). The habitat bands, nutrient particles, call signals, and minimap are all live simulation state, drawn by the app's own Canvas 2D renderer.*
+
 ## At a glance
 
 - **43-gene organisms** express into visible morphology, ecological traits, and synthesizer parameters.
@@ -101,6 +105,42 @@ React owns the controls and application lifecycle; the mutable `World` and `Audi
 
 For module boundaries, state ownership, and update order, see [Architecture](docs/ARCHITECTURE.md). For source-level contracts, see the [internal API reference](docs/API.md).
 
+## Inside the aquarium
+
+Every frame below is a real application state: the world layer drawn by the app's Canvas 2D renderer over its Three.js shader background, with the panels driven by the same statistics the simulation records. The hero shot uses the default seed (`2401`); all frames come from the same run.
+
+| | |
+| --- | --- |
+| ![The start screen: seed field, Generate button, and the first 40 organisms scattered across five habitats](docs/images/screenshot-intro.png) | ![A zoomed-in view of the community at t = 1200 s](docs/images/screenshot-closeup.png) |
+| *t = 0 — the start screen with the seed field and the first 40 organisms before the world begins moving.* | *t = 1200 s, zoomed in — bodies are drawn from genome expression: medusoid forms, tentacles, and per-individual color.* |
+| ![Scientific overlays at t = 1400 s: organism voices, habitat boundaries, and the spatial grid](docs/images/screenshot-overlays.png) | ![The Control Deck open mid-run](docs/images/screenshot-control-deck.png) |
+| *t = 1400 s with the scientific overlays (`G`) — organism voices, habitat boundaries, and the spatial grid the simulation uses for neighbor lookups.* | *The Control Deck — habitat conditions, evolutionary pressure, and audio settings, editable while the world keeps running.* |
+| ![The Observatory showing live population and sound statistics at t = 1550 s](docs/images/screenshot-observatory.png) | ![The organism inspector: phenotype, calls, genome, and lineage](docs/images/screenshot-inspector.png) |
+| *t = 1550 s — the Observatory: live population and sound statistics, keyframes, and the world rewind control.* | *t = 1750 s — the inspector for the selected organism: phenotype, call profile, genome, and lineage.* |
+
+## The ecology, measured
+
+The figures below are plotted from telemetry recorded during a single deterministic run of the actual `World` simulation — seed `2401`, 1800 s of simulated time, 30 fixed steps per second. It is the same `src/sim/world.ts` the browser runs, executed headlessly; every point is a number the simulation itself recorded, and no curve is illustrative.
+
+| | |
+| --- | --- |
+| ![Population, living species, and speciation events over the run](docs/images/chart-population.png) | ![Calls per second by class, 20 s moving average](docs/images/chart-communication.png) |
+| *Population and living species over 30 simulated minutes. The community grows from 40 founders to about 150 organisms and repeatedly diversifies, crashes, and recovers; speciation events are marked along the timeline.* | *Calls per second by class (20 s moving average). Pulse calls dominate the soundscape; mating, food, and social calls rise as the population establishes.* |
+| ![Population by habitat over the run](docs/images/chart-habitats.png) | ![Births and deaths per second, with mean generation and Shannon diversity](docs/images/chart-evolution.png) |
+| *Population by habitat. Thermal preferences, nutrient plumes, and acoustic windows sort the lineages spatially, and each zone keeps a stable share of the community.* | *Left: births and deaths per second. Right: mean generation (solid) and species-level Shannon diversity (dashed) — lineages diverge, speciate, and accumulate mutations.* |
+
+![Per-zone parameters across the five habitats](docs/images/fig-habitats.png)
+
+*The five habitats' per-zone parameters (seed 2401 order, after seeded ±5% variation). Each zone favors different bodies, speeds, and voices.*
+
+**How these were made.** [`scripts/sim-telemetry.mjs`](scripts/sim-telemetry.mjs) runs `src/sim/world.ts` headlessly — bundled with the project's own esbuild toolchain, no browser required — and writes every per-second statistic the simulation records. [`scripts/make_charts.py`](scripts/make_charts.py) plots them. Regenerate the set with:
+
+```bash
+npm ci
+pip install matplotlib numpy
+python3 scripts/make_charts.py
+```
+
 ## Repository map
 
 ```text
@@ -114,6 +154,8 @@ For module boundaries, state ownership, and update order, see [Architecture](doc
 │   ├── conductor.ts Automation lanes for ecological and audio parameters
 │   └── db.ts        IndexedDB stores and persistence record types
 ├── docs/            Architecture, design, operations, and maintenance notes
+│   └── images/      Screenshot and telemetry figures used in this README
+├── scripts/         Headless telemetry run and chart generator for the README figures
 ├── public/
 │   └── _redirects   Static-host fallback for the application entry point
 └── .github/
